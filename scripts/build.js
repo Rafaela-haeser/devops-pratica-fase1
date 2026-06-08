@@ -1,0 +1,7 @@
+import { cpSync, mkdirSync, rmSync } from "node:fs";
+
+rmSync("dist", { recursive: true, force: true });
+mkdirSync("dist", { recursive: true });
+cpSync("src", "dist", { recursive: true });
+
+console.log("Build concluído. Arquivos gerados na pasta dist/.");
