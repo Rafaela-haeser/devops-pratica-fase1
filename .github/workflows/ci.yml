@@ -1,0 +1,59 @@
+name: CI - DevOps Fase 1
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  app-ci:
+    name: Testes e build da aplicação
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar código do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Executar testes automatizados
+        run: npm test
+
+      - name: Executar build da aplicação
+        run: npm run build
+
+  terraform-validate:
+    name: Validar scripts Terraform
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: infra
+
+    steps:
+      - name: Baixar código do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.8.5"
+
+      - name: Inicializar Terraform sem backend remoto
+        run: terraform init -backend=false
+
+      - name: Verificar formatação dos arquivos Terraform
+        run: terraform fmt -check -recursive
+
+      - name: Validar configuração Terraform
+        run: terraform validate
