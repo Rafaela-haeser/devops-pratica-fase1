@@ -1,0 +1,17 @@
+flowchart LR
+    A[Desenvolvedor altera codigo] --> B[Commit e push na branch main]
+    B --> C[GitHub Actions dispara pipeline CI/CD]
+    C --> D[Instalar dependencias]
+    D --> E[Executar testes automatizados]
+    E --> F[Build da aplicacao]
+    F --> G[Validar Terraform]
+    F --> H[Build da imagem Docker]
+    H --> I[Executar container e validar /health]
+    F --> J[Auditoria de dependencias npm audit]
+    G --> K{Todas as validacoes aprovadas?}
+    I --> K
+    J --> K
+    K -- Sim --> L[Deploy continuo no GitHub Pages]
+    K -- Nao --> M[Pipeline falha e bloqueia entrega]
+    L --> N[Monitoramento e analise de resultados]
+    N --> O[Melhorias futuras: observabilidade, seguranca, orquestracao]

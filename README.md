@@ -1,40 +1,35 @@
-# DevOps na Prática — Fase 1
+# DevOps na Pratica - Fases 1 e 2
 
-Projeto desenvolvido para a Fase 1 do curso **DevOps na Prática**.
+Projeto pratico da disciplina **DevOps na Pratica**.
 
 ## Objetivo
 
-Demonstrar uma configuração inicial de DevOps com:
+Demonstrar um fluxo DevOps com:
 
-- repositório versionado no GitHub;
-- pipeline de Integração Contínua com GitHub Actions;
-- testes automatizados integrados ao pipeline;
-- scripts de Infraestrutura como Código com Terraform;
-- validação automática dos scripts de infraestrutura no pipeline.
+- controle de versao no GitHub;
+- pipeline de CI com GitHub Actions;
+- testes automatizados;
+- validacao de Infraestrutura como Codigo com Terraform;
+- containerizacao com Docker;
+- validacao automatizada do container;
+- auditoria basica de seguranca;
+- entrega continua com GitHub Pages.
 
-## Estrutura do projeto
+## Estrutura
 
 ```text
-.
-├── .github/workflows/ci.yml
-├── infra/
-│   ├── main.tf
-│   ├── outputs.tf
-│   ├── variables.tf
-│   └── versions.tf
-├── scripts/
-│   └── build.js
-├── src/
-│   ├── app.js
-│   ├── index.html
-│   └── style.css
-├── tests/
-│   └── app.test.js
-├── package.json
-└── README.md
+.github/workflows/ci-cd.yml   # Pipeline CI/CD da Fase 2
+infra/                        # Scripts Terraform
+src/                          # Codigo da aplicacao
+scripts/                      # Build e scripts de deploy
+tests/                        # Testes automatizados
+Dockerfile                    # Container da aplicacao
+docker-compose.yml            # Execucao local com Docker Compose
+nginx.conf                    # Configuracao do Nginx no container
+RELATORIO_FASE2.md            # Relatorio final da Fase 2
 ```
 
-## Como executar localmente
+## Comandos locais
 
 ```bash
 npm install
@@ -42,38 +37,34 @@ npm test
 npm run build
 ```
 
-## Como validar a infraestrutura localmente
+## Docker
 
 ```bash
-cd infra
-terraform init -backend=false
-terraform fmt -check -recursive
-terraform validate
+docker build -t devops-pratica-fase2:latest .
+docker run -d --name devops-pratica-fase2-web -p 8080:80 devops-pratica-fase2:latest
+curl http://localhost:8080/health
 ```
 
-## Pipeline de CI
+Ou com Docker Compose:
 
-O pipeline está configurado em:
-
-```text
-.github/workflows/ci.yml
+```bash
+docker compose up --build
 ```
 
-Ele executa automaticamente em `push`, `pull_request` e também manualmente por `workflow_dispatch`.
+## Deploy local com script
 
-Etapas principais:
+```bash
+bash scripts/deploy-container.sh
+```
 
-1. baixa o código do repositório;
-2. configura o Node.js;
-3. instala dependências;
-4. executa testes automatizados;
-5. executa build;
-6. configura Terraform;
-7. valida formatação dos arquivos `.tf`;
-8. valida a infraestrutura com `terraform validate`.
+## Pipeline CI/CD
 
-## Infraestrutura como Código
+O workflow `CI/CD - DevOps Fase 2` executa:
 
-A infraestrutura está descrita na pasta `infra/` e prevê o provisionamento de um bucket Amazon S3 configurado para hospedagem de site estático.
-
-> Observação: na Fase 1, o pipeline valida os scripts de infraestrutura. A aplicação real da infraestrutura (`terraform apply`) pode ser feita posteriormente, com credenciais AWS adequadas.
+1. testes automatizados;
+2. build da aplicacao;
+3. validacao Terraform;
+4. build e validacao Docker;
+5. auditoria de dependencias;
+6. deploy continuo no GitHub Pages.
+```

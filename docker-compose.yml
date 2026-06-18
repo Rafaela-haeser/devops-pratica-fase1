@@ -1,0 +1,10 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: devops-pratica-fase2:latest
+    container_name: devops-pratica-fase2-web
+    ports:
+      - "8080:80"
+    restart: unless-stopped
